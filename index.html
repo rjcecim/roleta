@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b271e">
+<title>Roleta GV Seringueira</title>
+<style>
+:root{color-scheme:dark;--gold:#f6d791;--cream:#fff6df;--green:#0d3226}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;min-height:100svh;background:radial-gradient(ellipse at 24% 35%,#215440 0%,#0b271e 54%,#071a15 100%);color:var(--cream);font-family:system-ui,sans-serif;display:grid;place-items:center;padding:clamp(14px,3vw,48px)}
+main{width:min(100%,1400px);display:grid;grid-template-columns:minmax(0,1.18fr) minmax(0,1fr);align-items:center;gap:clamp(20px,5vw,80px)}
+header{grid-column:2;grid-row:1;align-self:start}
+.brand{color:var(--gold);text-transform:uppercase;letter-spacing:.22em;font-size:clamp(12px,1.3vw,20px);font-weight:750;margin:0 0 .6em}
+h1{font-family:Georgia,serif;font-weight:normal;font-size:clamp(42px,6.2vw,105px);line-height:.92;letter-spacing:-.045em;margin:0}
+h1 em{color:var(--gold);font-weight:normal;display:block}
+.wheel{grid-column:1;grid-row:1/3;position:relative;width:min(100%,76vh,680px);justify-self:center;aspect-ratio:1;border-radius:50%;filter:drop-shadow(0 16px 22px #0007)}
+.wheel svg{display:block;width:100%;height:auto}
+.pointer{position:absolute;top:-2%;left:50%;width:11%;height:14%;transform:translateX(-50%);clip-path:polygon(0 0,100% 0,50% 100%);background:linear-gradient(110deg,#fff4c0,#d99e36 75%);z-index:1}
+.controls{grid-column:2;grid-row:2;align-self:start}
+.result{margin:0 0 18px;background:#071c15aa;border:1px solid #d7b56c75;border-radius:16px;min-height:4.6em;padding:14px 18px;display:flex;align-items:center;font-size:clamp(19px,2.25vw,34px);font-weight:650;line-height:1.18}
+.result.win{background:#214d38;border-color:var(--gold);color:var(--gold)}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+button{font:inherit;font-weight:750;min-height:48px;padding:10px 20px;border-radius:999px;cursor:pointer}
+#spin{background:linear-gradient(110deg,#ffebad,#dbad54);border:0;color:#13291f;flex:1;font-size:clamp(17px,1.8vw,26px)}
+#spin:disabled{opacity:.75;cursor:wait}
+#full{background:transparent;border:1px solid #c9a75e;color:var(--gold)}
+button:focus-visible{outline:3px solid white;outline-offset:4px}
+@media(max-width:720px) and (orientation:portrait){
+ main{grid-template-columns:1fr;gap:16px;text-align:center;max-width:510px}
+ header,.wheel,.controls{grid-column:1;grid-row:auto}
+ h1 em{display:inline}
+ .wheel{width:min(100%,49svh)}
+ .result{justify-content:center;min-height:3.5em;margin-bottom:10px}
+}
+@media(orientation:landscape) and (max-height:540px){
+ main{gap:12px 24px}
+ .wheel{width:min(100%,77svh)}
+ h1{font-size:clamp(36px,8vh,62px)}
+ .result{min-height:2.7em;margin-bottom:8px;padding:8px 12px}
+}
+
+/* Moldura e iluminação do fundo de apresentação */
+body {
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse at 26% 50%, #34644c 0%, #173e30 30%, transparent 64%),
+    radial-gradient(ellipse at 100% 0%, #315440 0%, transparent 55%),
+    linear-gradient(140deg, #0b261e, #061710 75%, #173b2e);
+  padding: clamp(28px, 5vw, 88px);
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(135deg, transparent 0 5px, #fff3c008 6px 7px),
+    repeating-radial-gradient(circle at -14% 112%, transparent 0 6.5vw, #e7be6338 6.55vw 6.65vw, transparent 6.72vw 8vw),
+    repeating-radial-gradient(circle at 108% -20%, transparent 0 7vw, #e7be6334 7.04vw 7.13vw, transparent 7.2vw 9vw);
+}
+body::after {
+  content: "";
+  position: fixed;
+  inset: clamp(9px, 1.6vw, 27px);
+  z-index: -1;
+  pointer-events: none;
+  border: 1px solid #e8c77d82;
+  box-shadow: inset 0 0 0 4px #081d18ab, inset 0 0 0 5px #d6ae5740;
+  background:
+    linear-gradient(#ffe4a3, #ffe4a3) left top / 34px 2px,
+    linear-gradient(#ffe4a3, #ffe4a3) left top / 2px 34px,
+    linear-gradient(#ffe4a3, #ffe4a3) right top / 34px 2px,
+    linear-gradient(#ffe4a3, #ffe4a3) right top / 2px 34px,
+    linear-gradient(#ffe4a3, #ffe4a3) left bottom / 34px 2px,
+    linear-gradient(#ffe4a3, #ffe4a3) left bottom / 2px 34px,
+    linear-gradient(#ffe4a3, #ffe4a3) right bottom / 34px 2px,
+    linear-gradient(#ffe4a3, #ffe4a3) right bottom / 2px 34px;
+  background-repeat: no-repeat;
+}
+main {
+  column-gap: clamp(28px, 6vw, 100px);
+  row-gap: clamp(20px, 3vh, 38px);
+}
+header { align-self: end; }
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  letter-spacing: .25em;
+}
+.brand::before {
+  content: "";
+  width: clamp(16px, 2.5vw, 42px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold));
+}
+h1 { text-shadow: 0 5px 24px #0006; }
+.wheel { filter: drop-shadow(0 0 24px #efc66a35) drop-shadow(0 18px 21px #0008); }
+.result {
+  border-radius: 12px;
+  background: linear-gradient(120deg, #102c23f2, #071a16e8);
+  box-shadow: 0 12px 32px #0003, inset 0 1px #ffe5a916;
+}
+#spin {
+  background: linear-gradient(110deg, #c38f3e, #ffeab0 40%, #e4b958 75%, #c9933f);
+  box-shadow: 0 7px 20px #0005, inset 0 1px #ffedba;
+}
+@media (max-width: 720px) and (orientation: portrait) {
+  body {
+    padding: 28px 22px;
+    background:
+      radial-gradient(ellipse at 50% 45%, #315d48 0%, #15392d 38%, transparent 72%),
+      linear-gradient(150deg, #15382a, #071b15 78%);
+  }
+  body::before { opacity: .65; }
+  main { gap: 16px; }
+  .brand::after {
+    content: "";
+    width: clamp(16px, 2.5vw, 42px);
+    height: 1px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+  }
+}
+@media (orientation: landscape) and (max-height: 540px) {
+  body { padding: 18px 25px; }
+  main { gap: 12px 24px; }
+}
+</style>
+</head>
+<body>
+<main>
+<header>
+<p class="brand">GV Seringueira</p>
+<h1>Roleta <em>Premiada</em></h1>
+</header>
+<div class="wheel" aria-hidden="true">
+<div class="pointer"></div>
+<svg viewBox="0 0 500 500">
+<defs>
+<linearGradient id="rim" x2=".8" y2="1"><stop stop-color="#fff1b8"/><stop offset=".48" stop-color="#d2a14b"/><stop offset="1" stop-color="#fff0ad"/></linearGradient>
+<radialGradient id="forest"><stop stop-color="#2d674c"/><stop offset="1" stop-color="#12392c"/></radialGradient>
+</defs>
+<circle cx="250" cy="250" r="249" fill="#071b15"/>
+<circle cx="250" cy="250" r="245" fill="url(#rim)"/>
+<circle cx="250" cy="250" r="233" fill="#102c21"/>
+<g id="disc" stroke="#f8dc95" stroke-width="2">
+  <path d="M250 250 163.13 40.28A227 227 0 0 1 336.87 40.28Z" fill="url(#forest)"/>
+  <text x="250.00" y="95.00" transform="rotate(0 250.00 100.00)" text-anchor="middle" stroke="none" fill="#fff5d6" font-family="system-ui,sans-serif" font-weight="800" font-size="22"><tspan x="250.00">Sacola</tspan><tspan x="250.00" dy="24">Natura</tspan></text>
+  <path d="M250 250 336.87 40.28A227 227 0 0 1 459.72 163.13Z" fill="#e4b962"/>
+  <text x="356.07" y="138.93" transform="rotate(45 356.07 143.93)" text-anchor="middle" stroke="none" fill="#122d22" font-family="system-ui,sans-serif" font-weight="800" font-size="22"><tspan x="356.07">Não foi</tspan><tspan x="356.07" dy="24">dessa vez</tspan></text>
+  <path d="M250 250 459.72 163.13A227 227 0 0 1 459.72 336.87Z" fill="#23543e"/>
+  <text x="400.00" y="245.00" transform="rotate(90 400.00 250.00)" text-anchor="middle" stroke="none" fill="#fff5d6" font-family="system-ui,sans-serif" font-weight="800" font-size="22"><tspan x="400.00">Sacola</tspan><tspan x="400.00" dy="24">Avon</tspan></text>
+  <path d="M250 250 459.72 336.87A227 227 0 0 1 336.87 459.72Z" fill="#f6d68b"/>
+  <text x="356.07" y="363.07" transform="rotate(135 356.07 356.07)" text-anchor="middle" stroke="none" fill="#122d22" font-family="system-ui,sans-serif" font-weight="800" font-size="22"><tspan x="356.07">Amostras</tspan></text>
+  <path d="M250 250 336.87 459.72A227 227 0 0 1 163.13 459.72Z" fill="#194332"/>
+  <text x="250.00" y="395.00" transform="rotate(180 250.00 400.00)" text-anchor="middle" stroke="none" fill="#fff5d6" font-family="system-ui,sans-serif" font-weight="800" font-size="22"><tspan x="250.00">Sacola</tspan><tspan x="250.00" dy="24">Avon</tspan></text>
+  <path d="M250 250 163.13 459.72A227 227 0 0 1 40.28 336.87Z" fill="#e4b962"/>
+  <text x="143.93" y="351.07" transform="rotate(225 143.93 356.07)" text-anchor="middle" stroke="none" fill="#122d22" font-family="system-ui,sans-serif" font-weight="800" font-size="22"><tspan x="143.93">Tente</tspan><tspan x="143.93" dy="24">outra vez</tspan></text>
+  <path d="M250 250 40.28 336.87A227 227 0 0 1 40.28 163.13Z" fill="#386a51"/>
+  <text x="100.00" y="245.00" transform="rotate(270 100.00 250.00)" text-anchor="middle" stroke="none" fill="#fff5d6" font-family="system-ui,sans-serif" font-weight="800" font-size="22"><tspan x="100.00">Sacola</tspan><tspan x="100.00" dy="24">Natura</tspan></text>
+  <path d="M250 250 40.28 163.13A227 227 0 0 1 163.13 40.28Z" fill="#e4b962"/>
+  <text x="143.93" y="138.93" transform="rotate(315 143.93 143.93)" text-anchor="middle" stroke="none" fill="#122d22" font-family="system-ui,sans-serif" font-weight="800" font-size="22"><tspan x="143.93">Não foi</tspan><tspan x="143.93" dy="24">dessa vez</tspan></text>
+</g>
+<circle cx="250" cy="250" r="48" fill="url(#rim)" stroke="#102c21" stroke-width="4"/>
+<circle cx="250" cy="250" r="37" fill="#113629" stroke="#f9dd96"/>
+<text x="250" y="260" text-anchor="middle" fill="#ffe7a6" font-family="Georgia,serif" font-size="30">GV</text>
+</svg>
+</div>
+<section class="controls" aria-label="Controles da roleta">
+<p id="result" class="result" role="status" aria-atomic="true">Abra o arquivo em um navegador ou app que execute HTML local para girar a roleta.</p>
+<div class="actions">
+<button id="spin" type="button" disabled>Girar roleta</button>
+<button id="full" type="button" hidden>Tela cheia</button>
+</div>
+</section>
+</main>
+<script>
+'use strict';
+const outcomes = [
+  'Parabéns, escolha uma sacola premiada Natura',
+  'Não foi dessa vez',
+  'Parabéns, escolha uma sacola premiada Avon',
+  'Amostras',
+  'Parabéns, escolha uma sacola premiada Avon',
+  'Tente outra vez',
+  'Parabéns, escolha uma sacola premiada Natura',
+  'Não foi dessa vez'
+];
+const spin = document.querySelector('#spin');
+const full = document.querySelector('#full');
+const disc = document.querySelector('#disc');
+const result = document.querySelector('#result');
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+let rotation = 0;
+result.textContent = 'Gire a roleta para descobrir o resultado.';
+spin.disabled = false;
+spin.addEventListener('click', () => {
+  const selected = Math.floor(Math.random() * outcomes.length);
+  const sectorAngle = 360 / outcomes.length;
+  const offset = (Math.random() - 0.5) * sectorAngle * 0.7;
+  const target = (360 - selected * sectorAngle + offset + 360) % 360;
+  const advance = (target - rotation % 360 + 360) % 360;
+  const initialRotation = rotation;
+  const distance = (reducedMotion.matches ? 0 : 360 * 5) + advance || 360;
+  spin.disabled = true;
+  result.classList.remove('win');
+  result.textContent = 'Girando…';
+  const duration = reducedMotion.matches ? 450 : 3700;
+  const startedAt = performance.now();
+
+  function animate(now) {
+    const progress = Math.min(1, Math.max(0, (now - startedAt) / duration));
+    const eased = 1 - (1 - progress) ** 4;
+    const angle = (initialRotation + distance * eased) % 360;
+    disc.setAttribute('transform', 'rotate(' + angle + ' 250 250)');
+    if (progress < 1) {
+      requestAnimationFrame(animate);
+      return;
+    }
+
+    rotation = target;
+    const outcome = outcomes[selected];
+    result.textContent = outcome;
+    result.classList.toggle('win', outcome.startsWith('Parabéns') || outcome === 'Amostras');
+    spin.textContent = outcome === 'Tente outra vez' ? 'Tentar outra vez' : 'Girar novamente';
+    spin.disabled = false;
+  }
+  requestAnimationFrame(animate);
+});
+if (document.fullscreenEnabled && document.documentElement.requestFullscreen) {
+  full.hidden = false;
+  full.addEventListener('click', async () => {
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
+      } else {
+        await document.documentElement.requestFullscreen();
+      }
+    } catch {
+      full.hidden = true;
+    }
+  });
+  document.addEventListener('fullscreenchange', () => {
+    full.textContent = document.fullscreenElement ? 'Sair da tela cheia' : 'Tela cheia';
+  });
+}
+</script>
+</body>
+</html>
